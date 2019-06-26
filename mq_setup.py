@@ -1,6 +1,11 @@
 import pika
 import functools
 
+import os
+import json
+
+connection_parameters = pika.ConnectionParameters(host='192.168.10.104', port='15672')
+
 class ConnectionModule:
     connection_parameters = pika.ConnectionParameters('localhost')
     @classmethod
@@ -16,9 +21,17 @@ class ConnectionModule:
             channel.open()
         return channel
 
-collector_exchange_name = ''
-calculator_queue_name = 'retreived_test'
-calculator_exchange_name = 'calculated_ex_test'
+# Get the exchange/queue name from json file based on runtime location
+# so that the module can be reused
+cwd = os.getcwd()
+mq_setup_file_location = os.path.join(cwd, 'mq_setup.json')
+print(mq_setup_file_location)
+with open(mq_setup_file_location, 'r') as read_file:
+    setup_paras = json.load(read_file)
+
+collector_exchange_name = setup_paras['collector_exchange_name']
+calculator_queue_name = setup_paras['calculator_queue_name']
+calculator_exchange_name = setup_paras['calculator_exchange_name']
 
 class MQSettings(ConnectionModule):
     def __init__(self):

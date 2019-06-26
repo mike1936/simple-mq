@@ -1,0 +1,5 @@
+{
+    "collector_exchange_name": "",
+    "calculator_queue_name": "retreived_test",
+    "calculator_exchange_name": "calculated_ex_test"
+}
